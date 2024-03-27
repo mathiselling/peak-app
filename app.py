@@ -35,6 +35,7 @@ with ui.sidebar(open='open'):
     with ui.panel_conditional('input.radio === "Top-list"'):
         ui.input_numeric('begin_list', 'Start of the list', 1, min=1, max=1645)
         ui.input_numeric('end_list', 'End of the list', 14, min=1, max=1645)
+    ui.input_dark_mode(mode="light")
 
 # Main content
 ICONS = {
