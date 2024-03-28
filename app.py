@@ -11,6 +11,9 @@ df01['Note'] = df01['Range'].str.strip().str.cat(df01['Location'].str.strip(), s
 # Title
 ui.page_opts(title='MyPeaks', fillable=True)
 
+# Push nav_panel to the right
+ui.nav_spacer()
+
 # Sidebar
 with ui.sidebar(open='open'):
     ui.input_radio_buttons(
@@ -42,41 +45,45 @@ ICONS = {
     'mountain': fa.icon_svg('mountain')
 }
 
-with ui.layout_columns(fill=False):
-    with ui.value_box(showcase=ICONS['mountain']):
-        'Peaks'
-        @render.text
-        def peak_names():
-            if input.radio.get() == 'Write down':
-                peak_list = [input.peak_1(), input.peak_2(), input.peak_3(), input.peak_4(), input.peak_5(),]
-                filtered_peak_list = [peak for peak in peak_list if peak]
-                return ', '.join(filtered_peak_list)
-            elif input.radio.get() == 'Select':
-                selected_peaks = input.selectize()
-                return ', '.join(selected_peaks)
-            elif input.radio.get() == 'Top-list':
-                return 'Top-List'
-            else:
-                return None
+with ui.nav_panel("Plot"):
+    with ui.layout_columns(fill=False):
+        with ui.value_box(showcase=ICONS['mountain']):
+            'Peaks'
+            @render.text
+            def peak_names():
+                if input.radio.get() == 'Write down':
+                    peak_list = [input.peak_1(), input.peak_2(), input.peak_3(), input.peak_4(), input.peak_5(),]
+                    filtered_peak_list = [peak for peak in peak_list if peak]
+                    return ', '.join(filtered_peak_list)
+                elif input.radio.get() == 'Select':
+                    selected_peaks = input.selectize()
+                    return ', '.join(selected_peaks)
+                elif input.radio.get() == 'Top-list':
+                    return 'Top-List'
+                else:
+                    return None
 
-@render_plotly
-def plot():
-    if input.radio.get() == 'Write down':
-        peak_1_value = input.peak_1()
-        peak_2_value = input.peak_2()
-        peak_3_value = input.peak_3()
-        peak_4_value = input.peak_4()
-        peak_5_value = input.peak_5()
-        df02 = df01.query(f'Mountain in ["{peak_1_value}", "{peak_2_value}", "{peak_3_value}", "{peak_4_value}", "{peak_5_value}",]')
-    elif input.radio.get() == 'Select':
-        selected_peaks = input.selectize()
-        df02 = df01[df01['Mountain'].isin(selected_peaks)]
-    elif input.radio.get() == 'Top-list':
-        df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
-    else:
-        df02 = pd.DataFrame(columns=df01.columns)
-    
-    scatter = px.scatter(df02, x='Mountain', y='Meters', hover_data=['Feet', 'Note'])
-    scatter.update_traces(marker=dict(size=60), marker_symbol='triangle-up')
-    scatter.update_layout(xaxis_title='', font=dict(size=18))
-    return scatter
+    @render_plotly
+    def plot():
+        if input.radio.get() == 'Write down':
+            peak_1_value = input.peak_1()
+            peak_2_value = input.peak_2()
+            peak_3_value = input.peak_3()
+            peak_4_value = input.peak_4()
+            peak_5_value = input.peak_5()
+            df02 = df01.query(f'Mountain in ["{peak_1_value}", "{peak_2_value}", "{peak_3_value}", "{peak_4_value}", "{peak_5_value}",]')
+        elif input.radio.get() == 'Select':
+            selected_peaks = input.selectize()
+            df02 = df01[df01['Mountain'].isin(selected_peaks)]
+        elif input.radio.get() == 'Top-list':
+            df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
+        else:
+            df02 = pd.DataFrame(columns=df01.columns)
+        
+        scatter = px.scatter(df02, x='Mountain', y='Meters', hover_data=['Feet', 'Note'])
+        scatter.update_traces(marker=dict(size=60), marker_symbol='triangle-up')
+        scatter.update_layout(xaxis_title='', font=dict(size=18))
+        return scatter
+
+with ui.nav_panel("Map"):
+    "Here comes the sun"
