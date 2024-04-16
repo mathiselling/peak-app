@@ -1,9 +1,10 @@
 import pandas as pd
 from shiny import render
 from shiny.express import ui, input
-from shinywidgets import render_plotly
+from shinywidgets import render_plotly, render_widget
 import plotly.express as px
 import faicons as fa
+import ipyleaflet as L
 
 df01 = pd.read_csv('peaks.csv').rename(columns={'Metres': 'Meters'})
 df01['Note'] = df01['Range'].str.strip().str.cat(df01['Location'].str.strip(), sep=' ', na_rep='')
@@ -86,4 +87,6 @@ with ui.nav_panel("Plot"):
         return scatter
 
 with ui.nav_panel("Map"):
-    "Here comes the sun"
+    @render_widget
+    def map():
+        return L.Map(zoom=15, center=(50.948529, 6.918097))
