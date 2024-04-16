@@ -19,20 +19,14 @@ ui.nav_spacer()
 with ui.sidebar(open='open'):
     ui.input_radio_buttons(
         'radio',
-        'Do you prefer to select mountains from a list, write down their names, or specify a range in the top-list?',
-        ['Select', 'Write down', 'Top-list']
+        'Do you want to specify the mountains yourself or explore the top-list?',
+        ['Specify', 'Top-list']
     )
-    with ui.panel_conditional('input.radio === "Write down"'):
-        ui.input_text('peak_1', 'Mountain 1')
-        ui.input_text('peak_2', 'Mountain 2')
-        ui.input_text('peak_3', 'Mountain 3')
-        ui.input_text('peak_4', 'Mountain 4')
-        ui.input_text('peak_5', 'Mountain 5')
-    with ui.panel_conditional('input.radio === "Select"'):
+    with ui.panel_conditional('input.radio === "Specify"'):
         mountain_options = df01['Mountain'].unique().tolist()
         ui.input_selectize(
             'selectize',  
-            'Select mountains below:',  
+            'Select mountains below or start writing:',  
             {option: option for option in mountain_options},  
             multiple=True,
         )
@@ -52,11 +46,7 @@ with ui.nav_panel("Plot"):
             'Peaks'
             @render.text
             def peak_names():
-                if input.radio.get() == 'Write down':
-                    peak_list = [input.peak_1(), input.peak_2(), input.peak_3(), input.peak_4(), input.peak_5(),]
-                    filtered_peak_list = [peak for peak in peak_list if peak]
-                    return ', '.join(filtered_peak_list)
-                elif input.radio.get() == 'Select':
+                if input.radio.get() == 'Specify':
                     selected_peaks = input.selectize()
                     return ', '.join(selected_peaks)
                 elif input.radio.get() == 'Top-list':
@@ -66,14 +56,7 @@ with ui.nav_panel("Plot"):
 
     @render_plotly
     def plot():
-        if input.radio.get() == 'Write down':
-            peak_1_value = input.peak_1()
-            peak_2_value = input.peak_2()
-            peak_3_value = input.peak_3()
-            peak_4_value = input.peak_4()
-            peak_5_value = input.peak_5()
-            df02 = df01.query(f'Mountain in ["{peak_1_value}", "{peak_2_value}", "{peak_3_value}", "{peak_4_value}", "{peak_5_value}",]')
-        elif input.radio.get() == 'Select':
+        if input.radio.get() == 'Specify':
             selected_peaks = input.selectize()
             df02 = df01[df01['Mountain'].isin(selected_peaks)]
         elif input.radio.get() == 'Top-list':
