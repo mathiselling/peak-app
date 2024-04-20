@@ -74,9 +74,19 @@ with ui.nav_panel("Map"):
     @render_widget
     def map():
         m = Map(zoom=3, center=(50.948529, 6.918097), scroll_wheel_zoom=True)
-        for mountain in input.selectize():
-            g = geocoder.osm(mountain)
-            latlng = (g.lat, g.lng)
-            marker = Marker(location=latlng, draggable=False)
-            m.add(marker)
+
+        if input.radio.get() == 'Specify':
+            for mountain in input.selectize():
+                g = geocoder.osm(mountain)
+                latlng = (g.lat, g.lng)
+                marker = Marker(location=latlng, draggable=False)
+                m.add(marker)
+        elif input.radio.get() == 'Top-list':
+            df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
+            for mountain in df02['Mountain']:
+                g = geocoder.osm(mountain)
+                latlng = (g.lat, g.lng)
+                marker = Marker(location=latlng, draggable=False)
+                m.add(marker)
+            
         return m
