@@ -4,7 +4,8 @@ from shiny.express import ui, input
 from shinywidgets import render_plotly, render_widget
 import plotly.express as px
 import faicons as fa
-import ipyleaflet as L
+from ipyleaflet import Map, Marker
+import geocoder
 
 df01 = pd.read_csv('peaks.csv').rename(columns={'Metres': 'Meters'})
 df01['Note'] = df01['Range'].str.strip().str.cat(df01['Location'].str.strip(), sep=' ', na_rep='')
@@ -72,4 +73,8 @@ with ui.nav_panel("Plot"):
 with ui.nav_panel("Map"):
     @render_widget
     def map():
-        return L.Map(zoom=15, center=(50.948529, 6.918097))
+        m = Map(zoom=3, center=(50.948529, 6.918097), scroll_wheel_zoom=True)
+        g = geocoder.osm('Wildspitze')
+        latlng = (g.lat, g.lng)
+        marker = Marker(location=latlng, draggable=False)
+        return m.add(marker)
