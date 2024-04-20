@@ -74,7 +74,9 @@ with ui.nav_panel("Map"):
     @render_widget
     def map():
         m = Map(zoom=3, center=(50.948529, 6.918097), scroll_wheel_zoom=True)
-        g = geocoder.osm('Wildspitze')
-        latlng = (g.lat, g.lng)
-        marker = Marker(location=latlng, draggable=False)
-        return m.add(marker)
+        for mountain in input.selectize():
+            g = geocoder.osm(mountain)
+            latlng = (g.lat, g.lng)
+            marker = Marker(location=latlng, draggable=False)
+            m.add(marker)
+        return m
