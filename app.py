@@ -4,7 +4,7 @@ from shiny.express import ui, input
 from shinywidgets import render_plotly, render_widget
 import plotly.express as px
 import faicons as fa
-from ipyleaflet import Map, Marker
+from ipyleaflet import Map, Marker, basemaps
 import geocoder
 
 df01 = pd.read_csv('peaks.csv').rename(columns={'Metres': 'Meters'})
@@ -73,7 +73,7 @@ with ui.nav_panel("Plot"):
 with ui.nav_panel("Map"):
     @render_widget
     def map():
-        m = Map(zoom=3, center=(50.948529, 6.918097), scroll_wheel_zoom=True)
+        m = Map(basemap=basemaps.Esri.NatGeoWorldMap, zoom=2, center=(27.986065, 86.922623), scroll_wheel_zoom=True)
 
         if input.radio.get() == 'Specify':
             for mountain in input.selectize():
