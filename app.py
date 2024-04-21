@@ -66,7 +66,7 @@ with ui.nav_panel("Plot"):
             df02 = pd.DataFrame(columns=df01.columns)
         
         scatter = px.scatter(df02, x='Mountain', y='Meters', hover_data=['Feet', 'Note'])
-        scatter.update_traces(marker=dict(size=60), marker_symbol='triangle-up')
+        scatter.update_traces(marker=dict(size=30), marker_symbol='triangle-up')
         scatter.update_layout(xaxis_title='', font=dict(size=18), modebar_remove=['resetScale', 'lasso2d', 'select2d'])
         return scatter
 
