@@ -79,14 +79,14 @@ with ui.nav_panel("Map"):
             for mountain in input.selectize():
                 g = geocoder.arcgis(mountain)
                 latlng = (g.lat, g.lng)
-                marker = Marker(location=latlng, draggable=False)
+                marker = Marker(location=latlng, draggable=False, title=mountain)
                 m.add(marker)
         elif input.radio.get() == 'Top-list':
             df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
             for mountain in df02['Mountain']:
                 g = geocoder.arcgis(mountain)
                 latlng = (g.lat, g.lng)
-                marker = Marker(location=latlng, draggable=False)
+                marker = Marker(location=latlng, draggable=False, title=mountain)
                 m.add(marker)
             
         return m
