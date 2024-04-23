@@ -48,8 +48,7 @@ with ui.nav_panel("Plot"):
             @render.text
             def peak_names():
                 if input.radio.get() == 'Specify':
-                    selected_peaks = input.selectize()
-                    return ', '.join(selected_peaks)
+                    return ', '.join(input.selectize())
                 elif input.radio.get() == 'Top-list':
                     return 'Top-List'
                 else:
@@ -58,8 +57,7 @@ with ui.nav_panel("Plot"):
     @render_plotly
     def plot():
         if input.radio.get() == 'Specify':
-            selected_peaks = input.selectize()
-            df02 = df01[df01['Mountain'].isin(selected_peaks)]
+            df02 = df01[df01['Mountain'].isin(input.selectize())]
         elif input.radio.get() == 'Top-list':
             df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
         else:
@@ -77,8 +75,7 @@ with ui.nav_panel("Map"):
             @render.text
             def peak_names_map():
                 if input.radio.get() == 'Specify':
-                    selected_peaks = input.selectize()
-                    return ', '.join(selected_peaks)
+                    return ', '.join(input.selectize())
                 elif input.radio.get() == 'Top-list':
                     return 'Top-List'
                 else:
