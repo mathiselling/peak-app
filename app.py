@@ -71,6 +71,19 @@ with ui.nav_panel("Plot"):
         return scatter
 
 with ui.nav_panel("Map"):
+    with ui.layout_columns(fill=False):
+        with ui.value_box(showcase=ICONS['mountain']):
+            'Peaks'
+            @render.text
+            def peak_names_map():
+                if input.radio.get() == 'Specify':
+                    selected_peaks = input.selectize()
+                    return ', '.join(selected_peaks)
+                elif input.radio.get() == 'Top-list':
+                    return 'Top-List'
+                else:
+                    return None
+                
     @render_widget
     def map():
         m = Map(basemap=basemaps.Esri.NatGeoWorldMap, zoom=2, center=(27.986065, 86.922623), scroll_wheel_zoom=True)
