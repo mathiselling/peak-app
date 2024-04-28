@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from shiny import render
 from shiny.express import ui, input
 from shinywidgets import render_plotly, render_widget
@@ -7,8 +8,9 @@ import faicons as fa
 from ipyleaflet import Map, Marker, basemaps
 import geocoder
 
-df01 = pd.read_csv('peaks.csv').rename(columns={'Metres': 'Meters'})
-df01['Note'] = df01['Range'].str.strip().str.cat(df01['Location'].str.strip(), sep=' ', na_rep='')
+df01 = pd.read_csv('peaks2.csv').rename(columns={'Metres': 'Meters'})
+# Pre-process the DataFrame to ensure 'latlng' column contains tuples
+df01['latlng'] = df01['latlng'].apply(lambda x: tuple(map(float, x.strip('[]').split(', '))) if isinstance(x, str) else x)
 
 # Title
 ui.page_opts(title='MyPeaks', fillable=True)
@@ -87,10 +89,9 @@ with ui.nav_panel("Map"):
 
         if input.radio.get() == 'Specify':
             for mountain in input.selectize():
-                g = geocoder.arcgis(mountain)
-                latlng = (g.lat, g.lng)
+                latlng = df01.loc[df01['Mountain'] == mountain, 'latlng'].iloc[0]
                 marker = Marker(location=latlng, draggable=False, title=mountain)
-                m.add(marker)
+                m.add_layer(marker)
         elif input.radio.get() == 'Top-list':
             df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
             for mountain in df02['Mountain']:
