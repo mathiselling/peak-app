@@ -5,7 +5,6 @@ from shinywidgets import render_plotly, render_widget
 import plotly.express as px
 import faicons as fa
 from ipyleaflet import Map, Marker, basemaps
-import geocoder
 
 df01 = pd.read_csv('peaks2.csv').rename(columns={'Metres': 'Meters'})
 # Pre-process the DataFrame to ensure 'latlng' column contains tuples
