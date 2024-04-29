@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from shiny import render
 from shiny.express import ui, input
 from shinywidgets import render_plotly, render_widget
