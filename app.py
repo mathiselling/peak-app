@@ -7,7 +7,7 @@ import faicons as fa
 from ipyleaflet import Map, Marker, basemaps
 
 df01 = pd.read_csv('peaks2.csv').rename(columns={'Metres': 'Meters'})
-# Pre-process the DataFrame to ensure 'latlng' column contains tuples
+df01['Meters'] = df01['Meters'].astype(int)
 df01['latlng'] = df01['latlng'].apply(lambda x: tuple(map(float, x.strip('[]').split(', '))) if isinstance(x, str) else x)
 
 # Title
@@ -115,12 +115,18 @@ with ui.nav_panel('Stats'):
         if input.radio.get() == 'Specify':
             df02 = df01[df01['Mountain'].isin(input.selectize())]
         elif input.radio.get() == 'Top-list':
-            df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
+            df02 = pd.DataFrame(columns=df01.columns)
         else:
             df02 = pd.DataFrame(columns=df01.columns)
         
         highest_mountain = df02['Meters'].max()
-        return f'Highest Altitude Reached: {highest_mountain} m'
+
+        sum_altitude = df02['Meters'].sum()
+
+        if input.radio.get() == 'Specify':
+            return f'Highest altitude reached: {highest_mountain} m'
+        else:
+            return 'Stats are not calculated for the top-list.'
 
 with ui.nav_control():
     ui.a(
