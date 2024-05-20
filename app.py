@@ -40,7 +40,7 @@ with ui.sidebar(open='open'):
         ui.input_numeric('end_list', 'End of the list', 14, min=1, max=1645)
 
 # Main content
-with ui.nav_panel("Map"):
+with ui.nav_panel('Map'):
     with ui.layout_columns(fill=False):
         with ui.value_box(showcase=mountain_icon):
             'Peaks'
@@ -70,12 +70,12 @@ with ui.nav_panel("Map"):
             
         return m
     
-with ui.nav_panel("Plot"):
+with ui.nav_panel('Plot'):
     with ui.layout_columns(fill=False):
         with ui.value_box(showcase=mountain_icon):
             'Peaks'
             @render.text
-            def peak_names():
+            def peak_names_plot():
                 if input.radio.get() == 'Specify':
                     return ', '.join(input.selectize())
                 elif input.radio.get() == 'Top-list':
@@ -96,6 +96,19 @@ with ui.nav_panel("Plot"):
         scatter.update_traces(marker=dict(size=30), marker_symbol='triangle-up')
         scatter.update_layout(xaxis_title='', font=dict(size=18), modebar_remove=['resetScale', 'lasso2d', 'select2d'])
         return scatter
+
+with ui.nav_panel('Stats'):
+    with ui.layout_columns(fill=False):
+        with ui.value_box(showcase=mountain_icon):
+            'Peaks'
+            @render.text
+            def peak_names_stats():
+                if input.radio.get() == 'Specify':
+                    return ', '.join(input.selectize())
+                elif input.radio.get() == 'Top-list':
+                    return 'Top-List'
+                else:
+                    return None
 
 with ui.nav_control():
     ui.a(
