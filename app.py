@@ -109,6 +109,18 @@ with ui.nav_panel('Stats'):
                     return 'Top-List'
                 else:
                     return None
+                
+    @render.text
+    def stats():
+        if input.radio.get() == 'Specify':
+            df02 = df01[df01['Mountain'].isin(input.selectize())]
+        elif input.radio.get() == 'Top-list':
+            df02 = df01.iloc[(input.begin_list() - 1):input.end_list()]
+        else:
+            df02 = pd.DataFrame(columns=df01.columns)
+        
+        highest_mountain = df02['Meters'].max()
+        return f'Highest Altitude Reached: {highest_mountain} m'
 
 with ui.nav_control():
     ui.a(
