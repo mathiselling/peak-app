@@ -18,6 +18,8 @@ ui.page_opts(title="MyPeaks", fillable=True)
 # Icons
 github_icon = fa.icon_svg("github", width="24px", height="24px", fill="black")
 mountain_icon = fa.icon_svg("mountain")
+arrow_up_icon = fa.icon_svg("arrow-up")
+plus_icon = fa.icon_svg("plus")
 
 # Push nav_panel to the right
 ui.nav_spacer()
@@ -127,7 +129,7 @@ with ui.nav_panel("Plot"):
 
 with ui.nav_panel("Stats"):
     with ui.layout_columns(fill=False):
-        with ui.value_box(showcase=mountain_icon):
+        with ui.value_box(showcase=arrow_up_icon):
             "Highest altitude reached"
 
             @render.text
@@ -143,7 +145,7 @@ with ui.nav_panel("Stats"):
 
                 return f"{highest_mountain} m"
 
-        with ui.value_box():
+        with ui.value_box(showcase=plus_icon):
             "Sum of the height of the mountains"
 
             @render.text
