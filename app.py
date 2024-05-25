@@ -146,7 +146,7 @@ with ui.nav_panel("Stats"):
                 return f"{highest_mountain} m"
 
         with ui.value_box(showcase=plus_icon):
-            "Sum of the height of the mountains"
+            "Total height of the mountains"
 
             @render.text
             def sum_height():
