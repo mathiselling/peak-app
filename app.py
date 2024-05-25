@@ -24,14 +24,21 @@ ui.nav_spacer()
 
 # Sidebar
 with ui.sidebar(open="open"):
+    ui.markdown(
+        """
+        The main purpose of this web application is to give you an overview of the mountains you have climbed in your life.
+
+        Of course, you can also explore other mountains or the top-list of the fourteen 8000m peaks.
+
+        **You choose:**
+        """
+    )
     ui.input_radio_buttons(
         "radio",
-        "The main purpose of this web application is to give you an overview of the mountains you have climbed in your life. \
-            You can also explore other mountains that interest you or explore the top list of the fourteen 8000m peaks. \
-                You choose:",
+        "",
         ["Select mountains", "Top-list"],
     )
-    with ui.panel_conditional('input.radio === "Specify"'):
+    with ui.panel_conditional('input.radio === "Select mountains"'):
         mountain_options = df01["Mountain"].unique().tolist()
         ui.input_selectize(
             "selectize",
@@ -51,7 +58,7 @@ with ui.nav_panel("Map"):
 
             @render.text
             def peak_names_map():
-                if input.radio.get() == "Specify":
+                if input.radio.get() == "Select mountains":
                     return ", ".join(input.selectize())
                 elif input.radio.get() == "Top-list":
                     return "Top-List"
@@ -67,7 +74,7 @@ with ui.nav_panel("Map"):
             scroll_wheel_zoom=True,
         )
 
-        if input.radio.get() == "Specify":
+        if input.radio.get() == "Select mountains":
             for mountain in input.selectize():
                 latlng = df01.loc[df01["Mountain"] == mountain, "latlng"].iloc[0]
                 marker = Marker(location=latlng, draggable=False, title=mountain)
@@ -90,7 +97,7 @@ with ui.nav_panel("Plot"):
 
             @render.text
             def peak_names_plot():
-                if input.radio.get() == "Specify":
+                if input.radio.get() == "Select mountains":
                     return ", ".join(input.selectize())
                 elif input.radio.get() == "Top-list":
                     return "Top-List"
@@ -99,7 +106,7 @@ with ui.nav_panel("Plot"):
 
     @render_plotly
     def plot():
-        if input.radio.get() == "Specify":
+        if input.radio.get() == "Select mountains":
             df02 = df01[df01["Mountain"].isin(input.selectize())]
         elif input.radio.get() == "Top-list":
             df02 = df01.iloc[(input.begin_list() - 1) : input.end_list()]
@@ -125,7 +132,7 @@ with ui.nav_panel("Stats"):
 
             @render.text
             def peak_names_stats():
-                if input.radio.get() == "Specify":
+                if input.radio.get() == "Select mountains":
                     return ", ".join(input.selectize())
                 elif input.radio.get() == "Top-list":
                     return "Top-List"
@@ -134,7 +141,7 @@ with ui.nav_panel("Stats"):
 
     @render.text
     def stats():
-        if input.radio.get() == "Specify":
+        if input.radio.get() == "Select mountains":
             df02 = df01[df01["Mountain"].isin(input.selectize())]
         elif input.radio.get() == "Top-list":
             df02 = pd.DataFrame(columns=df01.columns)
@@ -145,7 +152,7 @@ with ui.nav_panel("Stats"):
 
         sum_altitude = df02["Meters"].sum()
 
-        if input.radio.get() == "Specify":
+        if input.radio.get() == "Select mountains":
             return f"Highest altitude reached: {highest_mountain} m"
         else:
             return "Stats are not calculated for the top-list."
