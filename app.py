@@ -141,7 +141,7 @@ with ui.nav_panel("Stats"):
                 else:
                     df02 = pd.DataFrame(columns=df01.columns)
 
-                highest_mountain = df02["Meters"].max()
+                highest_mountain = df02["Meters"].max() if not df02["Meters"].empty else 0
 
                 return f"{highest_mountain} m"
 
