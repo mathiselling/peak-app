@@ -128,34 +128,36 @@ with ui.nav_panel("Plot"):
 with ui.nav_panel("Stats"):
     with ui.layout_columns(fill=False):
         with ui.value_box(showcase=mountain_icon):
-            "Mountains"
+            "Highest altitude reached"
 
             @render.text
-            def peak_names_stats():
+            def highest_mountain():
                 if input.radio.get() == "Select mountains":
-                    return ", ".join(input.selectize())
+                    df02 = df01[df01["Mountain"].isin(input.selectize())]
                 elif input.radio.get() == "Top-list":
-                    return "Top-List"
+                    df02 = df01.iloc[(input.begin_list() - 1) : input.end_list()]
                 else:
-                    return None
+                    df02 = pd.DataFrame(columns=df01.columns)
 
-    @render.text
-    def stats():
-        if input.radio.get() == "Select mountains":
-            df02 = df01[df01["Mountain"].isin(input.selectize())]
-        elif input.radio.get() == "Top-list":
-            df02 = pd.DataFrame(columns=df01.columns)
-        else:
-            df02 = pd.DataFrame(columns=df01.columns)
+                highest_mountain = df02["Meters"].max()
 
-        highest_mountain = df02["Meters"].max()
+                return f"{highest_mountain} m"
 
-        sum_altitude = df02["Meters"].sum()
+        with ui.value_box():
+            "Sum of the height of the mountains"
 
-        if input.radio.get() == "Select mountains":
-            return f"Highest altitude reached: {highest_mountain} m"
-        else:
-            return "Stats are not calculated for the top-list."
+            @render.text
+            def sum_height():
+                if input.radio.get() == "Select mountains":
+                    df02 = df01[df01["Mountain"].isin(input.selectize())]
+                elif input.radio.get() == "Top-list":
+                    df02 = df01.iloc[(input.begin_list() - 1) : input.end_list()]
+                else:
+                    df02 = pd.DataFrame(columns=df01.columns)
+
+                sum_height = df02["Meters"].sum()
+
+                return f"{sum_height} m"
 
 
 with ui.nav_control():
