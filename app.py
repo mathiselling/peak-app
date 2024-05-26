@@ -20,6 +20,7 @@ github_icon = fa.icon_svg("github", width="24px", height="24px", fill="black")
 mountain_icon = fa.icon_svg("mountain")
 arrow_up_icon = fa.icon_svg("arrow-up")
 plus_icon = fa.icon_svg("plus")
+list_icon = fa.icon_svg("list-ul")
 
 # Push nav_panel to the right
 ui.nav_spacer()
@@ -128,7 +129,7 @@ with ui.nav_panel("Plot"):
 
 
 with ui.nav_panel("Stats"):
-    with ui.layout_columns(fill=False):
+    with ui.layout_columns(fill=False, col_widths=(6, 6, 6)):
         with ui.value_box(showcase=arrow_up_icon):
             "Highest altitude reached"
 
@@ -160,6 +161,22 @@ with ui.nav_panel("Stats"):
                 sum_height = df02["Meters"].sum()
 
                 return f"{sum_height} m"
+
+        with ui.value_box(showcase=list_icon):
+            "Number of mountains"
+
+            @render.text
+            def number_mountains():
+                if input.radio.get() == "Select mountains":
+                    df02 = df01[df01["Mountain"].isin(input.selectize())]
+                elif input.radio.get() == "Top-list":
+                    df02 = df01.iloc[(input.begin_list() - 1) : input.end_list()]
+                else:
+                    df02 = pd.DataFrame(columns=df01.columns)
+
+                number_mountains = len(df02)
+
+                return f"{number_mountains}"
 
 
 with ui.nav_control():
