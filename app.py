@@ -144,7 +144,7 @@ with ui.nav_panel("Stats"):
 
                 highest_mountain = df02["Meters"].max() if not df02["Meters"].empty else 0
 
-                return f"{highest_mountain} m"
+                return f"{highest_mountain:,} m"
 
         with ui.value_box(showcase=plus_icon):
             "Total height of the mountains"
@@ -160,7 +160,7 @@ with ui.nav_panel("Stats"):
 
                 sum_height = df02["Meters"].sum()
 
-                return f"{sum_height} m"
+                return f"{sum_height:,} m"
 
         with ui.value_box(showcase=list_icon):
             "Number of mountains"
