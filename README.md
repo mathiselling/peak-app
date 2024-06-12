@@ -1,1 +1,1 @@
-In this shiny app, you can visualize information about a ton of mountains in a scatterplot and on a map.
+In this shiny app, you can visualize information about a ton of mountains on a map, in a scatterplot, and explore some summary statistics.
