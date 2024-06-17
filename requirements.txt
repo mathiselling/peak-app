@@ -4,4 +4,3 @@ shinywidgets
 plotly
 faicons
 ipyleaflet
-geocoder
