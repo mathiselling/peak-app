@@ -179,7 +179,9 @@ with ui.nav_panel("Stats"):
                 return f"{number_mountains}"
 
 with ui.nav_panel("Download"):
-        
+
+    ui.markdown("Download Text hierhin")
+
     @render.download(label="Download CSV")
     def download():
 
