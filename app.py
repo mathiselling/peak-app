@@ -178,6 +178,13 @@ with ui.nav_panel("Stats"):
 
                 return f"{number_mountains}"
 
+with ui.nav_panel("Download"):
+        
+    @render.download(label="Download CSV")
+    def download():
+
+        path = "peaks2.csv"
+        return path
 
 with ui.nav_control():
     ui.a(
