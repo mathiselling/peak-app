@@ -178,15 +178,15 @@ with ui.nav_panel("Stats"):
 
                 return f"{number_mountains}"
 
-with ui.nav_panel("Download"):
+with ui.nav_panel("Download CSV"):
+    with ui.layout_columns(fill=False, col_widths=(12, 2)):
+        ui.markdown("If you are interested in the CSV file containing all the mountains and additional information, you can download it here.")
 
-    ui.markdown("Download Text hierhin")
+        @render.download(label="Download CSV")
+        def download():
 
-    @render.download(label="Download CSV")
-    def download():
-
-        path = "peaks2.csv"
-        return path
+            path = "peaks2.csv"
+            return path
 
 with ui.nav_control():
     ui.a(
