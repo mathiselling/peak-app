@@ -182,11 +182,20 @@ with ui.nav_panel("Download CSV"):
     with ui.layout_columns(fill=False, col_widths=(12, 4)):
         ui.markdown("If you are interested in the CSV file containing all the mountains and additional information, you can download it here.")
 
-        @render.download(label="Download CSV")
+        @render.download(label="Download CSV", filename="peaks2.csv")
         def download():
+            if input.radio.get() == "Select mountains":
+                df02 = df01[df01["Mountain"].isin(input.selectize())]
+            elif input.radio.get() == "Top-list":
+                df02 = df01.iloc[(input.begin_list() - 1) : input.end_list()]
+            else:
+                df02 = pd.DataFrame(columns=df01.columns)
+            
+            print(df02)
 
-            path = "peaks2.csv"
-            return path
+            df02 = pd.DataFrame(df02)
+
+            yield df02.to_csv(index=False).encode('utf-8')
 
 with ui.nav_control():
     ui.a(
