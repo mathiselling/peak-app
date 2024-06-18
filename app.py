@@ -179,7 +179,7 @@ with ui.nav_panel("Stats"):
                 return f"{number_mountains}"
 
 with ui.nav_panel("Download CSV"):
-    with ui.layout_columns(fill=False, col_widths=(12, 2)):
+    with ui.layout_columns(fill=False, col_widths=(12, 4)):
         ui.markdown("If you are interested in the CSV file containing all the mountains and additional information, you can download it here.")
 
         @render.download(label="Download CSV")
