@@ -1,10 +1,13 @@
 import pandas as pd
-from shiny import render
+from shiny import render, reactive
 from shiny.express import ui, input
 from shinywidgets import render_plotly, render_widget
 import plotly.express as px
 import faicons as fa
 from ipyleaflet import Map, Marker, basemaps
+import io
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 
 df01 = pd.read_csv("peaks2.csv").rename(columns={"Metres": "Meters"})
 df01["Meters"] = df01["Meters"].astype(int)
@@ -178,24 +181,40 @@ with ui.nav_panel("Stats"):
 
                 return f"{number_mountains}"
 
-with ui.nav_panel("Download CSV"):
+with ui.nav_panel("Download Report"):
     with ui.layout_columns(fill=False, col_widths=(12, 4)):
-        ui.markdown("If you are interested in the CSV file containing all the mountains and additional information, you can download it here.")
+        ui.markdown("If you are interested in a report containing all the mountains and additional information, you can download it here.")
 
-        @render.download(label="Download CSV", filename="peaks2.csv")
-        def download():
+        @render.download(label="Download Report", filename="report_mypeaks.pdf")
+        async def export():
             if input.radio.get() == "Select mountains":
                 df02 = df01[df01["Mountain"].isin(input.selectize())]
             elif input.radio.get() == "Top-list":
                 df02 = df01.iloc[(input.begin_list() - 1) : input.end_list()]
             else:
                 df02 = pd.DataFrame(columns=df01.columns)
-            
-            print(df02)
 
-            df02 = pd.DataFrame(df02)
+            with io.BytesIO() as buffer:
+                with PdfPages(buffer) as pdf:
 
-            yield df02.to_csv(index=False).encode('utf-8')
+                    # Add table to PDF
+                    fig, ax = plt.subplots(figsize=(10, 4))
+                    ax.axis("tight")
+                    ax.axis("off")
+                    table_data = df02.values
+                    table = ax.table(
+                        cellText=table_data,
+                        colLabels=df02.columns,
+                        cellLoc="center",
+                        loc="center",
+                    )
+                    table.auto_set_font_size(False)
+                    table.set_fontsize(10)
+                    pdf.savefig(fig)
+                    plt.close(fig)
+
+                buffer.seek(0)
+                yield buffer.read()
 
 with ui.nav_control():
     ui.a(
