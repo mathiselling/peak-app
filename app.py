@@ -145,7 +145,9 @@ with ui.nav_panel("Stats"):
                 else:
                     df02 = pd.DataFrame(columns=df01.columns)
 
-                highest_mountain = df02["Meters"].max() if not df02["Meters"].empty else 0
+                highest_mountain = (
+                    df02["Meters"].max() if not df02["Meters"].empty else 0
+                )
 
                 return f"{highest_mountain:,} m"
 
@@ -181,9 +183,12 @@ with ui.nav_panel("Stats"):
 
                 return f"{number_mountains}"
 
+
 with ui.nav_panel("Download Report"):
     with ui.layout_columns(fill=False, col_widths=(12, 4)):
-        ui.markdown("If you are interested in a report containing all the mountains and additional information, you can download it here.")
+        ui.markdown(
+            "If you are interested in a report containing all the mountains and additional information, you can download it here."
+        )
 
         @render.download(label="Download Report", filename="report_mypeaks.pdf")
         async def export():
@@ -196,25 +201,38 @@ with ui.nav_panel("Download Report"):
 
             with io.BytesIO() as buffer:
                 with PdfPages(buffer) as pdf:
+                    df02.drop(columns=["Unnamed: 0", "Range", "Location", "latlng"], inplace=True)
+                    num_rows = df02.shape[0]
+                    column_widths = [2, 1, 1, 4]
+                    total_width = sum(column_widths) * 2
+                    print(f"number rows: {num_rows}")
 
                     # Add table to PDF
-                    fig, ax = plt.subplots(figsize=(10, 4))
+                    fig, ax = plt.subplots(figsize=(total_width, num_rows * 0.5))
                     ax.axis("tight")
                     ax.axis("off")
-                    table_data = df02.values
                     table = ax.table(
-                        cellText=table_data,
+                        cellText=df02.values,
                         colLabels=df02.columns,
-                        cellLoc="center",
+                        cellLoc="left",
                         loc="center",
                     )
                     table.auto_set_font_size(False)
-                    table.set_fontsize(10)
+                    table.set_fontsize(11)
+
+                    # Set column widths
+                    for col_idx, width in enumerate(column_widths):
+                        for row_idx in range(num_rows + 1):  # +1 to include header
+                            cell = table[row_idx, col_idx]
+                            cell.set_width((width * 2) / total_width)
+                            cell.set_height(0.05)
+
                     pdf.savefig(fig)
                     plt.close(fig)
 
                 buffer.seek(0)
                 yield buffer.read()
+
 
 with ui.nav_control():
     ui.a(
