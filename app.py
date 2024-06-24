@@ -8,6 +8,7 @@ from ipyleaflet import Map, Marker, basemaps
 import io
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+from mpl_toolkits.basemap import Basemap
 
 df01 = pd.read_csv("peaks2.csv").rename(columns={"Metres": "Meters"})
 df01["Meters"] = df01["Meters"].astype(int)
@@ -201,19 +202,47 @@ with ui.nav_panel("Download Report"):
 
             with io.BytesIO() as buffer:
                 with PdfPages(buffer) as pdf:
-                    df02.drop(columns=["Unnamed: 0", "Range", "Location", "latlng"], inplace=True)
-                    num_rows = df02.shape[0]
+                    # Add map to PDF
+                    worldmap = plt.figure(figsize=(12, 8))
+
+                    m = Basemap(
+                        projection="cyl",
+                        llcrnrlat=-60,
+                        urcrnrlat=90,
+                        llcrnrlon=-180,
+                        urcrnrlon=180,
+                        resolution="c",
+                    )
+
+                    m.drawcoastlines()
+                    m.drawcountries()
+                    m.shadedrelief(scale=0.2)
+
+                    # Plot the coordinates
+                    for lat, lon in df02["latlng"]:
+                        x, y = m(lon, lat)
+                        plt.plot(x, y, "r^", markersize=10)
+
+                    plt.title("World Map with Markers")
+
+                    pdf.savefig(worldmap)
+                    plt.close(worldmap)
+
+                    # Add table to PDF
+                    df03 = df02.drop(
+                        columns=["Unnamed: 0", "Range", "Location", "latlng"],
+                    )
+                    num_rows = df03.shape[0]
                     column_widths = [2, 1, 1, 4]
                     total_width = sum(column_widths) * 2
                     print(f"number rows: {num_rows}")
 
-                    # Add table to PDF
                     fig, ax = plt.subplots(figsize=(total_width, num_rows * 0.5))
                     ax.axis("tight")
                     ax.axis("off")
                     table = ax.table(
-                        cellText=df02.values,
-                        colLabels=df02.columns,
+                        cellText=df03.values,
+                        colLabels=df03.columns,
                         cellLoc="left",
                         loc="center",
                     )
