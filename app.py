@@ -237,7 +237,7 @@ with ui.nav_panel("Download Report"):
                     total_width = sum(column_widths) * 2
                     print(f"number rows: {num_rows}")
 
-                    fig, ax = plt.subplots(figsize=(total_width, num_rows * 0.5))
+                    fig, ax = plt.subplots(figsize=(total_width, 7))
                     ax.axis("tight")
                     ax.axis("off")
                     table = ax.table(
