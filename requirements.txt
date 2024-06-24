@@ -5,4 +5,4 @@ plotly
 faicons
 ipyleaflet
 matplotlib
-mpl_toolkits
+basemap
