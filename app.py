@@ -236,7 +236,9 @@ with ui.nav_panel("Download Report"):
                     column_widths = [2, 1, 1, 4]
                     total_width = sum(column_widths) * 2
 
-                    table_mountains_selected, ax = plt.subplots(figsize=(16, num_rows))
+                    height = 9 if num_rows < 15 else (num_rows * 0.3)
+
+                    table_mountains_selected, ax = plt.subplots(figsize=(16, height))
                     ax.axis("tight")
                     ax.axis("off")
                     table = ax.table(
@@ -254,8 +256,6 @@ with ui.nav_panel("Download Report"):
                             cell = table[row_idx, col_idx]
                             cell.set_width((width * 2) / total_width)
                             cell.set_height(0.05)
-
-                    plt.title("Mountains Sorted in Descending Order")
 
                     pdf.savefig(table_mountains_selected)
                     plt.close(table_mountains_selected)
