@@ -249,6 +249,10 @@ with ui.nav_panel("Download Report"):
                     table.set_fontsize(11)
 
                     # Set column widths
+                    num_rows = df03.shape[0]
+                    column_widths = [2, 1, 1, 4]
+                    total_width = sum(column_widths) * 2
+
                     for col_idx, width in enumerate(column_widths):
                         for row_idx in range(num_rows + 1):  # +1 to include header
                             cell = table[row_idx, col_idx]
