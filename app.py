@@ -203,7 +203,7 @@ with ui.nav_panel("Download Report"):
             with io.BytesIO() as buffer:
                 with PdfPages(buffer) as pdf:
                     # Add map to PDF
-                    worldmap = plt.figure(figsize=(12, 8))
+                    worldmap = plt.figure(figsize=(16, 9))
 
                     m = Basemap(
                         projection="cyl",
@@ -223,7 +223,7 @@ with ui.nav_panel("Download Report"):
                         x, y = m(lon, lat)
                         plt.plot(x, y, "r^", markersize=10)
 
-                    plt.title("World Map with Markers")
+                    plt.title("World Map With Markers of the Mountains You Have Climbed")
 
                     pdf.savefig(worldmap)
                     plt.close(worldmap)
@@ -235,9 +235,8 @@ with ui.nav_panel("Download Report"):
                     num_rows = df03.shape[0]
                     column_widths = [2, 1, 1, 4]
                     total_width = sum(column_widths) * 2
-                    print(f"number rows: {num_rows}")
 
-                    fig, ax = plt.subplots(figsize=(total_width, 7))
+                    table_mountains_selected, ax = plt.subplots(figsize=(16, 9))
                     ax.axis("tight")
                     ax.axis("off")
                     table = ax.table(
@@ -256,8 +255,8 @@ with ui.nav_panel("Download Report"):
                             cell.set_width((width * 2) / total_width)
                             cell.set_height(0.05)
 
-                    pdf.savefig(fig)
-                    plt.close(fig)
+                    pdf.savefig(table_mountains_selected)
+                    plt.close(table_mountains_selected)
 
                 buffer.seek(0)
                 yield buffer.read()
